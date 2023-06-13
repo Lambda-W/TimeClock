@@ -246,7 +246,7 @@ FString UTimeClockCore::GetSavePath()
 
 bool UTimeClockCore::LoadSaveFile(FString &FileContent)
 {
-	return FFileHelper::LoadFileToString(FileContent, *GetSavePath(), FFileHelper::EHashOptions::None);
+	return FFileHelper::LoadFileToString(FileContent, *GetSavePath(), FFileHelper::EHashOptions::None, 0);
 }
 
 bool UTimeClockCore::WriteSaveFile(FString FileContent)
