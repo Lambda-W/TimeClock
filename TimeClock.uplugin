@@ -10,7 +10,7 @@
 	"DocsURL": "www.samuelmetters.co.uk/timeclock",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/6f6a4afb66af43deb946a48b78d8c80a",
 	"SupportURL": "www.lambdaworks.co.uk",
-	"EngineVersion": "4.23.0",
+	"EngineVersion": "4.27.0",
 	"CanContainContent": true,
 	"Installed": true,
 	"Modules": [
