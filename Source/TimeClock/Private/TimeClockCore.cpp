@@ -71,7 +71,7 @@ void UTimeClockCore::BindTimeClockEvents()
 {
 	// These are when Time Clock will save the current stats it gathered.
 
-	FEditorDelegates::PreSaveWorld.AddUFunction(this, FName("SaveCurrentProjectData"));
+	FEditorDelegates::PreSaveWorldWithContext.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FEditorDelegates::PreBeginPIE.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FCoreDelegates::OnPreExit.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUFunction(this, FName("SaveCurrentProjectData"));

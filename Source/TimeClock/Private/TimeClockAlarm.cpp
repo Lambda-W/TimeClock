@@ -91,7 +91,7 @@ void UTimeClockAlarm::AddAlarm(FTimeClockAlarmData Alarm)
 	// Add the alarm to the config file.
 	UTimeClockSettings* TimeClockSettings = GetMutableDefault<UTimeClockSettings>();
 	TimeClockSettings->Alarms.AddUnique(Alarm);
-	TimeClockSettings->UpdateDefaultConfigFile();
+	TimeClockSettings->TryUpdateDefaultConfigFile();
 }
 
 void UTimeClockAlarm::RemoveAlarm(FTimeClockAlarmData Alarm)
