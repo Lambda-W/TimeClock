@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UObject/ObjectSaveContext.h"
 #include "TimeClock.h"
 #include "TimeClockCore.generated.h"
 
@@ -153,4 +154,8 @@ public:
 	// Export the input data in a CSV format.
 	UFUNCTION(BlueprintCallable, meta = (Keywords = "Time Clock"), Category = "Time Clock")
 	bool ExportDataToCSV(TArray<FTimeClockData> Data, FString Directory, bool AsTextFile);
+
+private:
+
+	void OnPreSaveWorldRecieved(class UWorld* World, FObjectPreSaveContext Context);
 };

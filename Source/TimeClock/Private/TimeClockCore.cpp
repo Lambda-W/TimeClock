@@ -3,6 +3,7 @@
 
 #include "TimeClockCore.h"
 #include "Misc/ConfigCacheIni.h"
+#include "UObject/ObjectSaveContext.h"
 #include "Editor.h"
 #include "Misc/CoreDelegates.h"
 #include "Misc/FileHelper.h"
@@ -71,7 +72,7 @@ void UTimeClockCore::BindTimeClockEvents()
 {
 	// These are when Time Clock will save the current stats it gathered.
 
-	FEditorDelegates::PreSaveWorldWithContext.AddUFunction(this, FName("SaveCurrentProjectData"));
+	FEditorDelegates::PreSaveWorldWithContext.AddUObject(this, &UTimeClockCore::OnPreSaveWorldRecieved);
 	FEditorDelegates::PreBeginPIE.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FCoreDelegates::OnPreExit.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUFunction(this, FName("SaveCurrentProjectData"));
@@ -397,5 +398,10 @@ bool UTimeClockCore::ExportDataToCSV(TArray<FTimeClockData> Data, FString Direct
 
 	UE_LOG(TimeClock, Display, TEXT("TimeClockData exported at: %s"), *FilePath);
 	return true;
+}
+
+void UTimeClockCore::OnPreSaveWorldRecieved(UWorld* World, FObjectPreSaveContext Context)
+{
+	SaveCurrentProjectData();
 }
 
