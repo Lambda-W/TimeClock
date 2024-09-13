@@ -54,6 +54,15 @@ void FTimeClockModule::RegisterWindowButton()
 	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
 
 	{
+#if ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION >= 4
+		UToolMenu* WindowMenu = UToolMenus::Get()->ExtendMenu("MainFrame.MainMenu.Window");
+		FToolMenuSection* ContentSectionPtr = WindowMenu->FindSection("Time Clock");
+		if (!ContentSectionPtr)
+		{
+			ContentSectionPtr = &WindowMenu->AddSection("Time Clock", NSLOCTEXT("MainAppMenu", "GetContentHeader", "Time Clock"));
+		}
+		ContentSectionPtr->AddMenuEntryWithCommandList(FTimeClockCommands::Get().OpenTimeClockCommand, PluginCommands);
+#else
 		TSharedPtr<FExtender> NewMenuExtender = MakeShareable(new FExtender);
 		NewMenuExtender->AddMenuExtension("LevelEditor",
 			EExtensionHook::After,
@@ -61,6 +70,7 @@ void FTimeClockModule::RegisterWindowButton()
 			FMenuExtensionDelegate::CreateRaw(this, &FTimeClockModule::CreateWindowButton));
 
 		LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(NewMenuExtender);
+#endif
 
 		UE_LOG(TimeClock, Display, TEXT("TimeClock window button added."));
 	}
