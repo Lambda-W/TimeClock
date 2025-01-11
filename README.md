@@ -9,7 +9,7 @@
 # Time Clock
 Easily track how long you've work in a project, and manage your times with alarms.
  
- **Supported versions:** 4.24, 4.25, 4.26, 4.27, 5.0, 5.1, 5.2, 5.3, 5.4
+ **Supported versions:** 4.24, 4.25, 4.26, 4.27, 5.0, 5.1, 5.2, 5.3, 5.4, 5.5
 
  **Supported targets:** This is an editor only plugin - Tested on Windows and MacOS
 
