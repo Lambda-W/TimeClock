@@ -14,11 +14,14 @@ UTimeClockCore::UTimeClockCore()
 {
 }
 
-UTimeClockCore::~UTimeClockCore()
+void UTimeClockCore::BeginDestroy()
 {
-	UObjectBaseUtility::RemoveFromRoot();
+	UObject::BeginDestroy();
+	if (UObjectBaseUtility::IsRooted())
+	{
+		UObjectBaseUtility::RemoveFromRoot();
+	}
 }
-
 void UTimeClockCore::InitialiseTimeClockCore()
 {
 	// Necessary to avoid random GC
