@@ -3,6 +3,7 @@
 
 #include "TimeClockCore.h"
 #include "Misc/ConfigCacheIni.h"
+#include "UObject/ObjectSaveContext.h"
 #include "Editor.h"
 #include "Misc/CoreDelegates.h"
 #include "Misc/FileHelper.h"
@@ -13,11 +14,14 @@ UTimeClockCore::UTimeClockCore()
 {
 }
 
-UTimeClockCore::~UTimeClockCore()
+void UTimeClockCore::BeginDestroy()
 {
-	UObjectBaseUtility::RemoveFromRoot();
+	UObject::BeginDestroy();
+	if (UObjectBaseUtility::IsRooted())
+	{
+		UObjectBaseUtility::RemoveFromRoot();
+	}
 }
-
 void UTimeClockCore::InitialiseTimeClockCore()
 {
 	// Necessary to avoid random GC
@@ -71,7 +75,7 @@ void UTimeClockCore::BindTimeClockEvents()
 {
 	// These are when Time Clock will save the current stats it gathered.
 
-	FEditorDelegates::PreSaveWorld.AddUFunction(this, FName("SaveCurrentProjectData"));
+	FEditorDelegates::PreSaveWorldWithContext.AddUObject(this, &UTimeClockCore::OnPreSaveWorldRecieved);
 	FEditorDelegates::PreBeginPIE.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FCoreDelegates::OnPreExit.AddUFunction(this, FName("SaveCurrentProjectData"));
 	FCoreDelegates::ApplicationWillEnterBackgroundDelegate.AddUFunction(this, FName("SaveCurrentProjectData"));
@@ -246,7 +250,7 @@ FString UTimeClockCore::GetSavePath()
 
 bool UTimeClockCore::LoadSaveFile(FString &FileContent)
 {
-	return FFileHelper::LoadFileToString(FileContent, *GetSavePath(), FFileHelper::EHashOptions::None);
+	return FFileHelper::LoadFileToString(FileContent, *GetSavePath(), FFileHelper::EHashOptions::None, 0);
 }
 
 bool UTimeClockCore::WriteSaveFile(FString FileContent)
@@ -397,5 +401,10 @@ bool UTimeClockCore::ExportDataToCSV(TArray<FTimeClockData> Data, FString Direct
 
 	UE_LOG(TimeClock, Display, TEXT("TimeClockData exported at: %s"), *FilePath);
 	return true;
+}
+
+void UTimeClockCore::OnPreSaveWorldRecieved(UWorld* World, FObjectPreSaveContext Context)
+{
+	SaveCurrentProjectData();
 }
 

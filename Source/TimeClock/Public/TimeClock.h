@@ -4,13 +4,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Modules/ModuleManager.h"
 #include "Modules/ModuleInterface.h"
+#include "Modules/ModuleManager.h"
 #include "TimeClockCore.h"
 #include "TimeClockAlarm.h"
 
 #define TIMECLOCK_MODULE_NAME TEXT("TimeClock")
 DECLARE_LOG_CATEGORY_EXTERN(TimeClock, Log, All)
+
 
 class FTimeClockModule : public IModuleInterface
 {
@@ -50,8 +51,8 @@ public:
 
 	/* ==== TimeClock Objects ==== */
 
-	UTimeClockCore* TimeClockCoreObject;
-	UTimeClockAlarm* TimeClockAlarmObject;
+	class UTimeClockCore* TimeClockCoreObject;
+	class UTimeClockAlarm* TimeClockAlarmObject;
 
 	void GetTimeClockCoreObject(UTimeClockCore* &OutTimeClockObject);
 	void GetTimeClockAlarmObject(UTimeClockAlarm* &OutTimeClockAlarmObject);

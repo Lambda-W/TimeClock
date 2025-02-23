@@ -43,7 +43,8 @@ public class TimeClock : ModuleRules
                 "UMG",
                 "Blutility",
                 "UMGEditor",
-                "InputCore"
+                "InputCore",
+                "ToolMenus"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

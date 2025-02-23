@@ -12,9 +12,14 @@ UTimeClockAlarm::UTimeClockAlarm()
 
 }
 
-UTimeClockAlarm::~UTimeClockAlarm()
+
+void UTimeClockAlarm::BeginDestroy()
 {
-	UObjectBaseUtility::RemoveFromRoot();
+	UObject::BeginDestroy();
+	if (UObjectBaseUtility::IsRooted())
+	{
+		UObjectBaseUtility::RemoveFromRoot();
+	}
 }
 
 void UTimeClockAlarm::InitialiseTimeClockAlarm()
@@ -91,7 +96,7 @@ void UTimeClockAlarm::AddAlarm(FTimeClockAlarmData Alarm)
 	// Add the alarm to the config file.
 	UTimeClockSettings* TimeClockSettings = GetMutableDefault<UTimeClockSettings>();
 	TimeClockSettings->Alarms.AddUnique(Alarm);
-	TimeClockSettings->UpdateDefaultConfigFile();
+	TimeClockSettings->TryUpdateDefaultConfigFile();
 }
 
 void UTimeClockAlarm::RemoveAlarm(FTimeClockAlarmData Alarm)
