@@ -12,11 +12,9 @@ UTimeClockAlarm::UTimeClockAlarm()
 
 }
 
-
-void UTimeClockAlarm::BeginDestroy()
+UTimeClockAlarm::~UTimeClockAlarm()
 {
-	UObject::BeginDestroy();
-	if (UObjectBaseUtility::IsRooted())
+	if (IsValidLowLevel() && UObjectBaseUtility::IsRooted())
 	{
 		UObjectBaseUtility::RemoveFromRoot();
 	}

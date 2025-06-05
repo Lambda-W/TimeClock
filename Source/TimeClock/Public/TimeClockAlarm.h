@@ -41,8 +41,8 @@ class TIMECLOCK_API UTimeClockAlarm : public UObject
 {
 	GENERATED_BODY()
 
-		UTimeClockAlarm();
-	virtual void BeginDestroy() override;
+	UTimeClockAlarm();
+	~UTimeClockAlarm();
 
 public:
 

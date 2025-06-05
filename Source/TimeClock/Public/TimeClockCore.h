@@ -64,7 +64,7 @@ class TIMECLOCK_API UTimeClockCore : public UObject
 
 public:
 	UTimeClockCore();
-	virtual void BeginDestroy() override;
+	~UTimeClockCore();
 
 	// The runtime TimeClock data for the opened project. Its value might differ to the saved value.
 	FTimeClockData ActiveProjectData;
