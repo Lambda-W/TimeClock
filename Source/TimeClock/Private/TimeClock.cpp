@@ -1,41 +1,43 @@
-// Copyright Lambda Works, Samuel Metters 2019. All rights reserved.
+﻿// Copyright Lambda Works, Samuel Metters 2019. All rights reserved.
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "TimeClock.h"
 #include "TimeClockCommands.h"
-#include "TimeClockCore.h"
-#include "TimeClockAlarm.h"
 #include "TimeClockSettings.h"
+#include "TimeClockStyle.h"
 
 #include "ISettingsModule.h"
 
 #include "LevelEditor.h"
-#include "Editor/Blutility/Classes/EditorUtilityWidgetBlueprint.h"
-#include "EditorUtilitySubsystem.h"
+#include "Widgets/Docking/SDockTab.h"
+#include "Widgets/STimeClockMainWidget.h"
+#include "Framework/Docking/TabManager.h"
 
 
 
 #define LOCTEXT_NAMESPACE "FTimeClockModule"
 DEFINE_LOG_CATEGORY(TimeClock);
 
+static const FName TimeClockTabName("TimeClock");
+
 
 void FTimeClockModule::StartupModule()
 {
 	UE_LOG(TimeClock, Display, TEXT("TimeClock module startup."));
 
+	FTimeClockStyle::Initialize();
+
 	RegisterSettings();
 
 	RegisterCommands();
-
-	RegisterWindowButton();
-
-	InitialiseTimeClockObjects();
+	RegisterTab();
 }
 
 void FTimeClockModule::ShutdownModule()
 {
 	FTimeClockCommands::Unregister();
-	ReleaseTimeClockObjects();
+	FTimeClockStyle::Shutdown();
+	FGlobalTabmanager::Get()->UnregisterNomadTabSpawner(TimeClockTabName);
 }
 
 void FTimeClockModule::RegisterCommands()
@@ -49,29 +51,47 @@ void FTimeClockModule::RegisterCommands()
 	);
 }
 
-void FTimeClockModule::RegisterWindowButton()
+void FTimeClockModule::RegisterTab()
 {
-	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
-
+	FGlobalTabmanager::Get()->RegisterNomadTabSpawner(TimeClockTabName, 
+	FOnSpawnTab::CreateLambda([](const FSpawnTabArgs& Args)
 	{
-		TSharedPtr<FExtender> NewMenuExtender = MakeShareable(new FExtender);
-		NewMenuExtender->AddMenuExtension("LevelEditor",
-			EExtensionHook::After,
-			PluginCommands,
-			FMenuExtensionDelegate::CreateRaw(this, &FTimeClockModule::CreateWindowButton));
+		return SNew(SDockTab)
+		   .TabRole(ETabRole::NomadTab)
+		   [
+			   SNew(STimeClockMainWidget)
+		   ];
+	}))
+	.SetCanSidebarTab(true)
+	.SetAutoGenerateMenuEntry(false) // Need to figure out how to create custom .SetGroup()  
+	.SetIcon(FSlateIcon(FTimeClockStyle::GetStyleSetName(), TEXT("TimeClock.Icon_40")));
+	
+	FLevelEditorModule& LevelEditorModule = FModuleManager::LoadModuleChecked<FLevelEditorModule>("LevelEditor");
+	TSharedPtr<FExtender> NewMenuExtender = MakeShareable(new FExtender);
 
-		LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(NewMenuExtender);
 
-		UE_LOG(TimeClock, Display, TEXT("TimeClock window button added."));
-	}
+	NewMenuExtender->AddMenuExtension("LevelEditor",
+		EExtensionHook::After,
+		PluginCommands,
+		FMenuExtensionDelegate::CreateRaw(this, &FTimeClockModule::CreateWindowButton));
+
+	LevelEditorModule.GetMenuExtensibilityManager()->AddExtender(NewMenuExtender);
+
+	
 }
 
 void FTimeClockModule::CreateWindowButton(FMenuBuilder& MenuBuilder)
 {
+	MenuBuilder.BeginSection("CustomMenu", TAttribute<FText>(FText::FromString("Time Clock")));
 
-	MenuBuilder.BeginSection("CustomMenu", TAttribute<FText>(FText::FromString("Time Clock Plugin")));
-
-	MenuBuilder.AddMenuEntry(FTimeClockCommands::Get().OpenTimeClockCommand);
+	MenuBuilder.AddMenuEntry(
+			FTimeClockCommands::Get().OpenTimeClockCommand,
+			NAME_None,
+			FTimeClockCommands::Get().OpenTimeClockCommand->GetLabel(),
+			FTimeClockCommands::Get().OpenTimeClockCommand->GetDescription(),
+			FSlateIcon(FTimeClockStyle::GetStyleSetName(), TEXT("TimeClock.Icon_16")),
+			NAME_None
+			);	
 
 	MenuBuilder.EndSection();
 }
@@ -89,62 +109,9 @@ void FTimeClockModule::RegisterSettings()
 
 void FTimeClockModule::OpenTimeClock()
 {
-	UE_LOG(TimeClock, Display, TEXT("TimeClock widget opening."));
-
-	FString PathToWidget = FString("EditorUtilityWidgetBlueprint'/TimeClock/TimeClock.TimeClock'");
-
-	UObject* WidgetReference = LoadObject<UObject>(nullptr, *PathToWidget);
-	UEditorUtilityWidgetBlueprint* Widget = (UEditorUtilityWidgetBlueprint*)WidgetReference;
-	if (!WidgetReference) {
-		UE_LOG(TimeClock, Error, TEXT("Could not find the TimeClock widget. Make sure there is a EditorUtilityWidget called 'TimeClock' in TimeClock/"));
-		return;
-	}
-	if (!WidgetReference) {
-		UE_LOG(TimeClock, Error, TEXT("Failed to cast to the TimeClock EditorUtilityWidget."));
-		return;
-	}
-
-	UEditorUtilitySubsystem* EditorUtilitySubsystem = GEditor->GetEditorSubsystem<UEditorUtilitySubsystem>();
-	EditorUtilitySubsystem->SpawnAndRegisterTab(Widget);
-}
-
-
-void FTimeClockModule::InitialiseTimeClockObjects()
-{
-	TimeClockCoreObject = NewObject<UTimeClockCore>();
-	TimeClockCoreObject->InitialiseTimeClockCore();
-
-	TimeClockAlarmObject = NewObject<UTimeClockAlarm>();
-	TimeClockAlarmObject->InitialiseTimeClockAlarm();
-}
-
-void FTimeClockModule::ReleaseTimeClockObjects()
-{
-	if (TimeClockCoreObject)
-	{
-		//TimeClockCoreObject->ConditionalBeginDestroy();
-	}
-
-	if (TimeClockAlarmObject)
-	{
-
-	}
-}
-
-void FTimeClockModule::GetTimeClockCoreObject(UTimeClockCore* &OutTimeClockObject)
-{
-	OutTimeClockObject = TimeClockCoreObject;
-	return;
-
-}
-
-
-void FTimeClockModule::GetTimeClockAlarmObject(UTimeClockAlarm* &OutTimeClockAlarmObject)
-{
-	OutTimeClockAlarmObject = TimeClockAlarmObject;
-	return;
+	FGlobalTabmanager::Get()->TryInvokeTab(TimeClockTabName);
 }
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FTimeClockModule, TimeClock)
+IMPLEMENT_MODULE(FTimeClockModule, TimeClock);

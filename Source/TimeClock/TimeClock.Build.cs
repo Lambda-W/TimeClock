@@ -37,13 +37,15 @@ public class TimeClock : ModuleRules
 			{
 				"CoreUObject",
 				"Engine",
+				"EditorSubsystem",
                 "EditorStyle",
                 "Slate",
 				"SlateCore",
                 "UMG",
                 "Blutility",
                 "UMGEditor",
-                "InputCore"
+                "InputCore",
+                "DesktopPlatform"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
