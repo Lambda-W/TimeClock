@@ -1,4 +1,4 @@
-// Copyright Lambda Works, Samuel Metters 2019. All rights reserved.
+﻿// Copyright Lambda Works, Samuel Metters 2019. All rights reserved.
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
@@ -6,8 +6,6 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 #include "Modules/ModuleInterface.h"
-#include "TimeClockCore.h"
-#include "TimeClockAlarm.h"
 
 #define TIMECLOCK_MODULE_NAME TEXT("TimeClock")
 DECLARE_LOG_CATEGORY_EXTERN(TimeClock, Log, All)
@@ -29,36 +27,19 @@ private:
 
 	/* ==== Window dropdown button ==== */
 	
-		// Maps of commands and thier bindings
+	// Maps of commands and thier bindings
 	TSharedPtr<FUICommandList> PluginCommands;
 
 	// Binds commands and map them.
 	void RegisterCommands();
 
 	// Registers TimeClock commands to the "Window" dropdown.
-	void RegisterWindowButton();
+	void RegisterTab();
 
 	// Spawns the command buttons. Happens when the "Window" dropdown is clicked.
 	void CreateWindowButton(FMenuBuilder& MenuBuilder);
 
-	// Opens the main interface.
+	/** This function will be bound to Command (by default it will open the Tab) */
 	void OpenTimeClock();
-
-
-
-public:
-
-	/* ==== TimeClock Objects ==== */
-
-	UTimeClockCore* TimeClockCoreObject;
-	UTimeClockAlarm* TimeClockAlarmObject;
-
-	void GetTimeClockCoreObject(UTimeClockCore* &OutTimeClockObject);
-	void GetTimeClockAlarmObject(UTimeClockAlarm* &OutTimeClockAlarmObject);
-
-	// Creates and releases TimeClock objects (such as Core and Alarm).
-	void InitialiseTimeClockObjects();
-	void ReleaseTimeClockObjects();
-
 
 };
