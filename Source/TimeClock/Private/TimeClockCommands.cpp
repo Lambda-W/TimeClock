@@ -10,7 +10,7 @@
 
 void FTimeClockCommands::RegisterCommands()
 {
-	UI_COMMAND(OpenTimeClockCommand, "Open Time Clock", "Open the Time Clock interface.", EUserInterfaceActionType::Button, FInputGesture());
+	UI_COMMAND(OpenTimeClockCommand, "Time Clock", "Open the Time Clock interface.", EUserInterfaceActionType::Button, FInputGesture());
 }
 
 #undef LOCTEXT_NAMESPACE
