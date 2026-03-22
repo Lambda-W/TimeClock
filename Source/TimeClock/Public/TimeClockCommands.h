@@ -17,7 +17,11 @@ public:
 			TEXT("TimeClock"),
 			NSLOCTEXT("Contexts", "TimeClock", "TimeClock Plugin"),
 			NAME_None,
+#if ENGINE_MAJOR_VERSION <= 5 && ENGINE_MINOR_VERSION < 1
 			FEditorStyle::GetStyleSetName()
+#elif ENGINE_MAJOR_VERSION <= 5 && ENGINE_MINOR_VERSION >= 1
+			FAppStyle::GetAppStyleSetName()
+#endif
 			) {}
 
 	virtual void RegisterCommands() override;
