@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "TimeClockAlarm.h"
+#include "TimeClockSubsystem.h"
 #include "TimeClockSettings.generated.h"
 
 /**
@@ -19,5 +19,4 @@ class TIMECLOCK_API UTimeClockSettings : public UObject
 // List of all alarms saved for this project. You can export/import these to any other project like you would other settings (see buttons top right of the Project Settings window).
 UPROPERTY(EditAnywhere, config, Category = Alarms)
 TArray<FTimeClockAlarmData> Alarms;
-
 };
