@@ -1,29 +1,15 @@
-// Copyright Lambda Works, Samuel Metters 2019. All rights reserved.
+﻿// Copyright Lambda Works, Samuel Metters 2019. All rights reserved.
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 
 #include "TimeClockBPLibrary.h"
-#include "TimeClockCore.h"
-#include "TimeClockAlarm.h"
+#include "TimeClockSubsystem.h"
 #include "TimeClock.h"
 #include "TimeClockNotificationManager.h"
 
-UTimeClockCore* UTimeClockBPLibrary::GetTimeClockObject()
+UTimeClockSubsystem* UTimeClockBPLibrary::GetTimeClockSubsystem()
 {
-	UTimeClockCore* ReturnObject;
-
-	FModuleManager::GetModuleChecked<FTimeClockModule>("TimeClock").GetTimeClockCoreObject(ReturnObject);
-
-	return ReturnObject;
-};
-
-UTimeClockAlarm* UTimeClockBPLibrary::GetTimeClockAlarmObject()
-{
-	UTimeClockAlarm* ReturnObject;
-
-	FModuleManager::GetModuleChecked<FTimeClockModule>("TimeClock").GetTimeClockAlarmObject(ReturnObject);
-
-	return ReturnObject;
+    return UTimeClockSubsystem::GetTimeClockSubsystem();
 }
 
 void UTimeClockBPLibrary::AddEditorNotification(FString Message, float Duration, bool PlaySound)
@@ -31,4 +17,3 @@ void UTimeClockBPLibrary::AddEditorNotification(FString Message, float Duration,
 	FTimeClockNotificationManager::Get()->DispatchNotification(Message, Duration, PlaySound);
 	
 }
-
