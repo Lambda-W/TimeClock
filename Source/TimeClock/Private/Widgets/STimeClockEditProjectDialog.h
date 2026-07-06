@@ -9,6 +9,7 @@
 #include "TimeClockBPLibrary.h"
 
 #include "Widgets/SCompoundWidget.h"
+#include "Widgets/Input/SButton.h"
 #include "Widgets/Input/SEditableText.h"
 #include "Widgets/Input/SSpinBox.h"
 

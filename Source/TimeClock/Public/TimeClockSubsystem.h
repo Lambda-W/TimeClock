@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "EditorSubsystem.h"
 #include "Engine/Texture2D.h"
+#include "Engine/TimerHandle.h"
 #include "TimeClockSubsystem.generated.h"
 
 #define LINE_DELIMITER TEXT("_END_OF_LINE_")
@@ -123,9 +124,6 @@ public:
 	virtual void Deinitialize() override;
 
 	static UTimeClockSubsystem* GetTimeClockSubsystem();
-
-	// Starts the timer which regularly checks for any alarms to trigger.
-	void StartTimeClockRefreshTimer();
 
 	// The function called to check for any alarms to trigger.
 	void TimeClockRefreshTick();

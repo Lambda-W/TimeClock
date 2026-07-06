@@ -7,6 +7,7 @@
 #include "TimeClockSubsystem.h"
 #include "TimerManager.h"
 
+class SImage;
 class STimeClockHome;
 class STimeClockProjectList;
 class STimeClockAlarmList;

@@ -8,6 +8,8 @@
 #include "Modules/ModuleInterface.h"
 
 #define TIMECLOCK_MODULE_NAME TEXT("TimeClock")
+class FMenuBuilder;
+class FUICommandList;
 DECLARE_LOG_CATEGORY_EXTERN(TimeClock, Log, All)
 
 class FTimeClockModule : public IModuleInterface
