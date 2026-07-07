@@ -11,7 +11,7 @@
 #include "LevelEditor.h"
 #include "Misc/CoreDelegates.h"
 #include "Misc/FileHelper.h"
-#include "HAL/PlatformFilemanager.h"
+#include "HAL/PlatformFileManager.h"
 #include "GenericPlatform/GenericPlatformFile.h"
 #include "UObject/ObjectSaveContext.h"
 #include "TimeClockFileIO.h"
